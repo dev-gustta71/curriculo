@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Currículo em PDF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        form label {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            color: #444;
+            font-weight: 600;
+            text-align: left;
+        }
+        form input, form textarea, form select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            height: auto;
+        }
+        form select {
+            height: 40px;
+        }
+        .gerar-btn {
+            width: 100%;
+            padding: 15px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gerador de Currículo</h1>
+        <form id="curriculoForm">
+            <label for="nome">Nome Completo</label>
+            <input type="text" id="nome" name="nome" placeholder="Ex: João da Silva" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Ex: joao@email.com" required>
+
+            <label for="telefone">Telefone</label>
+            <input type="tel" id="telefone" name="telefone" placeholder="Ex: (11) 98765-4321" required>
+
+            <label for="endereco">Endereço</label>
+            <input type="text" id="endereco" name="endereco" placeholder="Ex: Rua das Flores, 123" required>
+
+            <label for="cargo">Cargo Pretendido</label>
+            <select id="cargo" name="cargo" required>
+                <option value="" disabled selected>Selecione um cargo</option>
+                <option value="Analista de Sistemas">Analista de Sistemas</option>
+                <option value="Desenvolvedor Web">Desenvolvedor Web</option>
+                <option value="Engenheiro de Software">Engenheiro de Software</option>
+                <option value="Gerente de Projetos">Gerente de Projetos</option>
+                <option value="Administrador de Redes">Administrador de Redes</option>
+                <option value="Analista de Dados">Analista de Dados</option>
+                <option value="Designer Gráfico">Designer Gráfico</option>
+                <option value="Outros">Outros</option>
+            </select>
+
+            <label for="resumo">Resumo Profissional</label>
+            <textarea id="resumo" name="resumo" rows="3" placeholder="Breve descrição sobre sua experiência e habilidades" required></textarea>
+
+            <label for="experiencia">Experiência Profissional</label>
+            <textarea id="experiencia" name="experiencia" rows="4" placeholder="Detalhe suas experiências profissionais" required></textarea>
+
+            <label for="formacao">Formação Acadêmica</label>
+            <textarea id="formacao" name="formacao" rows="3" placeholder="Descreva sua formação acadêmica" required></textarea>
+
+            <label for="habilidades">Habilidades</label>
+            <textarea id="habilidades" name="habilidades" rows="3" placeholder="Ex: Liderança, Python, Gestão de Projetos" required></textarea>
+
+            <button type="button" onclick="gerarPDF()" class="gerar-btn">Gerar Currículo</button>
+        </form>
+    </div>
+
+    <!-- Inclui jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script>
+        function gerarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Captura os dados do formulário
+            const nome = document.getElementById("nome").value;
+            const email = document.getElementById("email").value;
+            const telefone = document.getElementById("telefone").value;
+            const endereco = document.getElementById("endereco").value;
+            const cargo = document.getElementById("cargo").value;
+            const resumo = document.getElementById("resumo").value;
+            const experiencia = document.getElementById("experiencia").value;
+            const formacao = document.getElementById("formacao").value;
+            const habilidades = document.getElementById("habilidades").value;
+
+            let yPosition = 20; // Posição inicial
+
+            // Cabeçalho
+            doc.setFont("Helvetica", "bold");
+            doc.setFontSize(16);
+            doc.text(nome, 105, yPosition, { align: "center" });
+            yPosition += 10;
+
+            doc.setFont("Helvetica", "normal");
+            doc.setFontSize(12);
+            doc.text(`Email: ${email} | Telefone: ${telefone}`, 105, yPosition, { align: "center" });
+            yPosition += 10;
+            doc.text(`Endereço: ${endereco}`, 105, yPosition, { align: "center" });
+            yPosition += 15;
+
+            doc.line(10, yPosition, 200, yPosition);
+            yPosition += 10;
+
+            // Seções
+            addSection("Cargo Pretendido", cargo);
+            addSection("Resumo Profissional", resumo);
+            addSection("Experiência Profissional", experiencia);
+            addSection("Formação Acadêmica", formacao);
+            addSection("Habilidades", habilidades);
+
+            // Salvar PDF
+            doc.save("Curriculo.pdf");
+            alert("Download do currículo realizado com sucesso!");
+
+            // Função para adicionar seções
+            function addSection(title, content) {
+                doc.setFont("Helvetica", "bold");
+                doc.setFontSize(14);
+                doc.text(title, 10, yPosition);
+                yPosition += 8;
+
+                doc.setFont("Helvetica", "normal");
+                doc.setFontSize(12);
+                const lines = doc.splitTextToSize(content, 180);
+                lines.forEach(line => {
+                    doc.text(line, 10, yPosition);
+                    yPosition += 8;
+                });
+                yPosition += 5; // Espaço extra
+            }
+        }
+    </script>
+</body>
+</html>
