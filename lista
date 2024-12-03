@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Currículos Gerados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #222222;
+            color: #ddd;
+            margin: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #333;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            font-size: 28px;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #555;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            color: #ddd;
+        }
+        th {
+            background-color: #444;
+            font-weight: bold;
+        }
+        td {
+            background-color: #444;
+        }
+        .download-link {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .download-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Currículos Gerados</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Data de Criação</th>
+                    <th>Baixar PDF</th>
+                </tr>
+            </thead>
+            <tbody id="curriculoList">
+                <!-- Os currículos gerados serão listados aqui dinamicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Função para carregar a lista de currículos (simulada com dados estáticos)
+        document.addEventListener("DOMContentLoaded", function() {
+            // Dados de exemplo para mostrar na lista
+            const curriculos = [
+                { nome: "João da Silva", data: "2024-12-01", arquivo: "curriculo_joao.pdf" },
+                { nome: "Maria Oliveira", data: "2024-12-02", arquivo: "curriculo_maria.pdf" },
+                { nome: "Carlos Souza", data: "2024-12-03", arquivo: "curriculo_carlos.pdf" }
+            ];
+
+            const curriculoList = document.getElementById("curriculoList");
+
+            // Adiciona as linhas na tabela
+            curriculos.forEach(curriculo => {
+                const tr = document.createElement("tr");
+
+                // Coluna de nome
+                const tdNome = document.createElement("td");
+                tdNome.textContent = curriculo.nome;
+
+                // Coluna de data
+                const tdData = document.createElement("td");
+                tdData.textContent = curriculo.data;
+
+                // Coluna de link para download
+                const tdDownload = document.createElement("td");
+                const downloadLink = document.createElement("a");
+                downloadLink.href = curriculo.arquivo;
+                downloadLink.textContent = "Baixar PDF";
+                downloadLink.className = "download-link";
+                tdDownload.appendChild(downloadLink);
+
+                tr.appendChild(tdNome);
+                tr.appendChild(tdData);
+                tr.appendChild(tdDownload);
+
+                curriculoList.appendChild(tr);
+            });
+        });
+    </script>
+</body>
+</html>
